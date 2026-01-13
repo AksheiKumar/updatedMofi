@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #000000 #1f2937;
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #000000 #1f2937;
+  }
 }
 
+/* Webkit browsers (Chrome, Safari, Edge) */
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;

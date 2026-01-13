@@ -47,7 +47,7 @@ export default function AuthModal({ onClose }) {
     setLoading(true);
 
     try {
-      const res = await api.post("/auth/login", { email, password });
+      const res = await api.post("/login", { email, password });
       login(res.data.access, res.data.user);
       onClose();
     } catch (err) {
@@ -74,7 +74,7 @@ export default function AuthModal({ onClose }) {
       Object.keys(form).forEach((key) => formData.append(key, form[key]));
       if (imageFile) formData.append("file", imageFile);
 
-      const res = await api.post("/auth/register", formData, {
+      const res = await api.post("/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -98,7 +98,7 @@ export default function AuthModal({ onClose }) {
   /* ---------- GOOGLE LOGIN ---------- */
   const handleGoogleLogin = async () => {
     try {
-      const res = await api.get("/auth/google/login");
+      const res = await api.get("/google/login");
       window.location.href = res.data.url; // redirect to Google OAuth
     } catch (err) {
       console.error("Google login failed", err);

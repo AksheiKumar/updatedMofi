@@ -8,26 +8,32 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* ================= RESTORE SESSION ================= */
   useEffect(() => {
     const restoreSession = async () => {
       try {
+        // GOOGLE CALLBACK
         const params = new URLSearchParams(window.location.search);
         const googleAccess = params.get("access");
 
         if (googleAccess) {
           setAccessToken(googleAccess);
           setApiAccessToken(googleAccess);
-          const me = await api.get("/auth/me");
+
+          const me = await api.get("/me");
           setUser(me.data);
-          window.history.replaceState({}, document.title, "/");
+
+          window.history.replaceState({}, "", "/");
           setLoading(false);
           return;
         }
 
-        const r = await api.post("/auth/refresh");
+
+        const r = await api.post("/refresh");
         setAccessToken(r.data.access);
         setApiAccessToken(r.data.access);
-        const me = await api.get("/auth/me");
+
+        const me = await api.get("/me");
         setUser(me.data);
       } catch {
         setUser(null);
@@ -41,15 +47,17 @@ export const AuthProvider = ({ children }) => {
     restoreSession();
   }, []);
 
+  /* ================= LOGIN ================= */
   const login = (token, userData) => {
     setAccessToken(token);
     setApiAccessToken(token);
     setUser(userData);
   };
 
+  /* ================= LOGOUT ================= */
   const logout = async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post("/logout");
     } catch {}
     setUser(null);
     setAccessToken(null);
@@ -68,7 +76,7 @@ export const AuthProvider = ({ children }) => {
         logout,
       }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
